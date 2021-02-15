@@ -5,41 +5,40 @@ namespace InitialPrefabs.UniversalRoutines {
 
     public class ContextRunner {
 
-        List<RoutineContext> active;
-        List<RoutineContext> free;
+        internal List<RoutineContext> Active;
+        internal List<RoutineContext> Free;
 
         public ContextRunner(int initialCapacity) {
-            active = new List<RoutineContext>(initialCapacity);
-            free = new List<RoutineContext>(initialCapacity);
+            Active = new List<RoutineContext>(initialCapacity);
+            Free = new List<RoutineContext>(initialCapacity);
 
             for (int i = 0; i < initialCapacity; i++) {
-                free.Add(new RoutineContext());
+                Free.Add(new RoutineContext());
             }
         }
 
         public void PushRoutine(IEnumerator enumerator) {
-            if (free.Count == 0) {
-                active.Add(new RoutineContext(enumerator));
+            if (Free.Count == 0) {
+                Active.Add(new RoutineContext(enumerator));
             } else {
-                var last = free.Count - 1;
-                var context = free[last];
-                free.RemoveAt(last);
+                var last = Free.Count - 1;
+                var context = Free[last];
+                Free.RemoveAt(last);
 
                 context.Add(enumerator);
-                active.Add(context);
+                Active.Add(context);
             }
         }
 
         public void Run() {
             // Run in reverse order, so we can clean up any finished contexts.
-            for (int i = active.Count - 1; i >= 0; i--) {
-                UnityEngine.Debug.Log($"Running: {i}");
-                var current = active[i];
+            for (int i = Active.Count - 1; i >= 0; i--) {
+                var current = Active[i];
                 current.Run();
 
                 if (current.IsEmpty()) {
-                    free.Add(current);
-                    active.RemoveAt(i);
+                    Free.Add(current);
+                    Active.RemoveAt(i);
                 }
             }
         }
