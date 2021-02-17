@@ -23,7 +23,6 @@ namespace InitialPrefabs.UniversalRoutines {
         }
 
         internal static void PostLateUpdate() {
-            // TODO: Add an update routine to iterate through all coroutines and finalize them.
             ContextRunner.Run();
         }
 

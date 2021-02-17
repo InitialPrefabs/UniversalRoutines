@@ -23,7 +23,6 @@ namespace InitialPrefabs.UniversalRoutines {
         }
 
         internal static void PreLateUpdate() {
-            // TODO: Add an update routine to iterate through all coroutines and finalize them.
             ContextRunner.Run();
         }
 
@@ -32,9 +31,11 @@ namespace InitialPrefabs.UniversalRoutines {
         }
 
         public static void Stop(int id) {
+            ContextRunner.Stop(id);
         }
 
         public static void StopAll() {
+            ContextRunner.StopAll();
         }
     }
 }
