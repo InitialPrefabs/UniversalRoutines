@@ -1,6 +1,8 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections;
-using NUnit.Framework;
+
+using Random = System.Random;
 
 namespace InitialPrefabs.UniversalRoutines.Tests {
 
@@ -13,13 +15,11 @@ namespace InitialPrefabs.UniversalRoutines.Tests {
             context = new RoutineContext();
         }
 
-        // TODO: Add tests to destroy an IEnumerator and catch if there is an error.
-
         [Test]
         public void RoutineAddedByDefault() {
-            context = new RoutineContext(WaitFor1SecondOnce());
-
+            context = new RoutineContext(WaitFor1SecondOnce(), 25);
             Assert.AreEqual(1, context.Contexts.Count, "Enumerator not added with constructor.");
+            Assert.AreEqual(25, context.ID);
         }
 
         [Test]
@@ -34,6 +34,8 @@ namespace InitialPrefabs.UniversalRoutines.Tests {
 
             context.Reset();
             Assert.True(context.IsEmpty());
+
+            Assert.AreEqual(0, context.ID);
         }
 
         [Test]
@@ -51,6 +53,22 @@ namespace InitialPrefabs.UniversalRoutines.Tests {
 
             Assert.IsTrue(context.IsEmpty(), 
                 $"Routine Context did not flush itself, {context.Contexts.Count} remaining");
+        }
+
+        [Test]
+        public void InitializeEmptyThrowsError() {
+            context = new RoutineContext();
+
+            var seed = (int)Math.Floor(DateTime.Now.TimeOfDay.TotalHours);
+            context.ID = new Random(seed).Next();
+
+            if (context.ID == 0) {
+                context.ID = 1;
+            }
+
+            Assert.Throws<InvalidOperationException>(() => {
+                context.Initialize(WaitFor1SecondOnce(), GetHashCode());
+            });
         }
 
         IEnumerator WaitFor1SecondOnce() {

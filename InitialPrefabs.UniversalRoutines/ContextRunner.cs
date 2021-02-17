@@ -17,15 +17,15 @@ namespace InitialPrefabs.UniversalRoutines {
             }
         }
 
-        public void PushRoutine(IEnumerator enumerator) {
+        public void PushRoutine(IEnumerator enumerator, int id) {
             if (Free.Count == 0) {
-                Active.Add(new RoutineContext(enumerator));
+                Active.Add(new RoutineContext(enumerator, id));
             } else {
                 var last = Free.Count - 1;
                 var context = Free[last];
                 Free.RemoveAt(last);
 
-                context.Add(enumerator);
+                context.Initialize(enumerator, id);
                 Active.Add(context);
             }
         }
@@ -41,6 +41,28 @@ namespace InitialPrefabs.UniversalRoutines {
                     Active.RemoveAt(i);
                 }
             }
+        }
+
+        public void Stop(int id) {
+            for (int i = Active.Count - 1; i >= 0; i--) {
+                var current = Active[i];
+                if (current.ID == id) {
+                    current.Reset();
+
+                    Active.RemoveAt(i);
+                    Free.Add(current);
+                }
+            }
+        }
+
+        public void StopAll() {
+            for (int i = Active.Count - 1; i >= 0; i--) {
+                var current = Active[i];
+                current.Reset();
+                Free.Add(current);
+            }
+
+            Active.Clear();
         }
     }
 }

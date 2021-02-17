@@ -27,8 +27,14 @@ namespace InitialPrefabs.UniversalRoutines {
             ContextRunner.Run();
         }
 
-        public static void Push(IEnumerator enumerator) {
-            ContextRunner.PushRoutine(enumerator);
+        public static void Push(IEnumerator enumerator, int id) {
+            ContextRunner.PushRoutine(enumerator, id);
+        }
+
+        public static void Stop(int id) {
+        }
+
+        public static void StopAll() {
         }
     }
 }
