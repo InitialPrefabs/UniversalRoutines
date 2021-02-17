@@ -71,6 +71,13 @@ namespace InitialPrefabs.UniversalRoutines.Tests {
             });
         }
 
+        [Test]
+        public void InitializeWithInvalidID() {
+            Assert.Throws<InvalidOperationException>(() => {
+                context.Initialize(ChainTesting(), 0);
+            });
+        }
+
         IEnumerator WaitFor1SecondOnce() {
             yield return new WaitForNSeconds(1);
         }

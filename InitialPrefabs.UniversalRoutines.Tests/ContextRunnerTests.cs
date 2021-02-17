@@ -34,7 +34,7 @@ namespace InitialPrefabs.UniversalRoutines.Tests {
         [Test]
         public void StopAll() {
             for (int i = 0; i < 5; i++) {
-                contextRunner.PushRoutine(Test(), i);
+                contextRunner.PushRoutine(Test(), i + 1);
             }
             Assert.AreEqual(5, contextRunner.Active.Count, "Did not push 5 coroutines");
             Assert.AreEqual(0, contextRunner.Free.Count, "Did not use 5 free slots");
